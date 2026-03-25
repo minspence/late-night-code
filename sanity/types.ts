@@ -133,3 +133,15 @@ export type Slug = {
 
 export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: sanity/lib/queries.ts
+// Variable: POST_QUERY
+// Query: *[_type == "post" && slug.current == $slug][0]{    title, body, mainImage  }
+export type POST_QUERYResult = null;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "./lib/client" {
+  interface SanityQueries {
+    "*[_type == \"post\" && slug.current == $slug][0]{\n    title, body, mainImage\n  }": POST_QUERYResult;
+  }
+}
