@@ -6,4 +6,4 @@ export const POST_QUERY = defineQuery(
   }`
 )
 
-export const POSTS_QUERY = defineQuery(`*[_type == "post"]{title, slug}`)
+export const POSTS_QUERY = defineQuery(`*[_type == "post"]{_id, title, slug}`)

@@ -171,24 +171,25 @@ export type AllSanitySchemaTypes = Category | Post | Author | Slug | SanityImage
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: sanity/lib/queries.ts
 // Variable: POST_QUERY
-// Query: *[_type == "post" && slug.current == $slug][0]{    title, body, mainImage }
+// Query: *[_type == "post" && slug.current == $slug][0]{    title, body, mainImage  }
 export type POST_QUERYResult = {
   title: string | null;
   body: null;
   mainImage: null;
 } | null;
 // Variable: POSTS_QUERY
-// Query: *[_type == "post"]{title, slug}
+// Query: *[_type == "post"]{_id, title, slug}
 export type POSTS_QUERYResult = Array<{
+  _id: string;
   title: string | null;
   slug: Slug | null;
 }>;
 
 // Query TypeMap
 import "@sanity/client";
-declare module "./lib/client" {
+declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"post\" && slug.current == $slug][0]{\n    title, body, mainImage\n  }": POST_QUERYResult;
-    "*[_type == \"post\"]{title, slug}": POSTS_QUERYResult;
+    "*[_type == \"post\"]{_id, title, slug}": POSTS_QUERYResult;
   }
 }
