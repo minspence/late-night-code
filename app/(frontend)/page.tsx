@@ -5,7 +5,7 @@ export default async function Page() {
     <div>
       <h1 className="text-4xl font-bold">Late Night Code</h1>
         <hr/>
-        <Link href="/posts">View posts &rarr</Link>
+        <Link href="/posts">View posts &rarr;</Link>
     </div>
   )
 }

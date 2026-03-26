@@ -137,11 +137,15 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 // Variable: POST_QUERY
 // Query: *[_type == "post" && slug.current == $slug][0]{    title, body, mainImage  }
 export type POST_QUERYResult = null;
+// Variable: POSTS_QUERY
+// Query: *[_type == "post"]{title, slug}
+export type POSTS_QUERYResult = Array<never>;
 
 // Query TypeMap
 import "@sanity/client";
-declare module "./lib/client" {
+declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"post\" && slug.current == $slug][0]{\n    title, body, mainImage\n  }": POST_QUERYResult;
+    "*[_type == \"post\"]{title, slug}": POSTS_QUERYResult;
   }
 }
