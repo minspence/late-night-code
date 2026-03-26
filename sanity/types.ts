@@ -13,6 +13,48 @@
  */
 
 // Source: schema.json
+export type Category = {
+  _id: string;
+  _type: "category";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+};
+
+export type Post = {
+  _id: string;
+  _type: "post";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  author?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "author";
+  };
+  categories?: "web development" | "tutorial" | "work life balance" | "personal growth" | "other";
+  date?: string;
+};
+
+export type Author = {
+  _id: string;
+  _type: "author";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+};
+
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -125,25 +167,26 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
-};
-
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint | Slug;
+export type AllSanitySchemaTypes = Category | Post | Author | Slug | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: sanity/lib/queries.ts
 // Variable: POST_QUERY
-// Query: *[_type == "post" && slug.current == $slug][0]{    title, body, mainImage  }
-export type POST_QUERYResult = null;
+// Query: *[_type == "post" && slug.current == $slug][0]{    title, body, mainImage }
+export type POST_QUERYResult = {
+  title: string | null;
+  body: null;
+  mainImage: null;
+} | null;
 // Variable: POSTS_QUERY
 // Query: *[_type == "post"]{title, slug}
-export type POSTS_QUERYResult = Array<never>;
+export type POSTS_QUERYResult = Array<{
+  title: string | null;
+  slug: Slug | null;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
-declare module "@sanity/client" {
+declare module "./lib/client" {
   interface SanityQueries {
     "*[_type == \"post\" && slug.current == $slug][0]{\n    title, body, mainImage\n  }": POST_QUERYResult;
     "*[_type == \"post\"]{title, slug}": POSTS_QUERYResult;

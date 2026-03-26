@@ -20,7 +20,7 @@ export const postType = defineType({
             type: 'slug',
             group: 'details',
             options: {
-                source: 'name'
+                source: 'title'
             },
             validation: (rule) => rule.required().error(`Required to generate a page on the website.`),
         }),
