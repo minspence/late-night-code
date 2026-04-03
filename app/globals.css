@@ -1,1 +1,25 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-magenta-200: #fe78c5;
+  --color-magenta-500: #fb3998;
+
+  --color-blue-200: #2cdde8;
+  --color-blue-400: #3486c1;
+  --color-blue-500: #1a2a57;
+
+  --color-gray-200: #b1b1bb;
+  --color-gray-300: #86879d;
+  --color-gray-500: #0f2249;
+}
+
+body {
+  background: radial-gradient(ellipse at top, #26316d 0%, #000 60%);
+  background-attachment: fixed;
+  min-height: 100dvh;
+  color: #fff;
+}
