@@ -1,27 +1,27 @@
-import type { Metadata } from "next"
-import Image from "next/image"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import { PortableText } from "@portabletext/react"
-import { sanityFetch } from "@/sanity/lib/live"
-import { POST_QUERY } from "@/sanity/lib/queries"
-import { urlFor } from "@/sanity/lib/image"
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { PortableText } from "@portabletext/react";
+import { sanityFetch } from "@/sanity/lib/live";
+import { POST_QUERY } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
 
-type Props = { params: Promise<{ slug: string }> }
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { data: post } = await sanityFetch({
     query: POST_QUERY,
     params: await params,
-  })
+  });
 
-  if (!post) return {}
+  if (!post) return {};
 
-  const title = post.seo?.metaTitle ?? post.title ?? "Post"
-  const description = post.seo?.metaDescription ?? post.excerpt ?? undefined
+  const title = post.seo?.metaTitle ?? post.title ?? "Post";
+  const description = post.seo?.metaDescription ?? post.excerpt ?? undefined;
   const ogImage = post.mainImage?.asset
     ? urlFor(post.mainImage).width(1200).height(630).url()
-    : undefined
+    : undefined;
 
   return {
     title,
@@ -34,25 +34,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       authors: post.author?.name ? [post.author.name] : undefined,
       ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 630 }] }),
     },
-  }
+  };
 }
 
 function formatDate(dateString: string | null | undefined) {
-  if (!dateString) return null
+  if (!dateString) return null;
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
-  })
+  });
 }
 
 export default async function PostPage({ params }: Props) {
   const { data: post } = await sanityFetch({
     query: POST_QUERY,
     params: await params,
-  })
+  });
 
-  if (!post) notFound()
+  if (!post) notFound();
 
   return (
     <main className="container mx-auto max-w-3xl px-5 py-16 md:py-20">
@@ -75,9 +75,26 @@ export default async function PostPage({ params }: Props) {
           </Link>
         )}
         {post.publishedAt && (
-          <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+          <time dateTime={post.publishedAt}>
+            {formatDate(post.publishedAt)}
+          </time>
         )}
       </div>
+
+      {/* Main image */}
+      {post.mainImage?.asset && (
+        <div className="mb-10 rounded-xl overflow-hidden">
+          <Image
+            src={urlFor(post.mainImage).width(1200).height(675).url()}
+            alt={post.mainImage.alt ?? post.title ?? "Post image"}
+            width={1200}
+            height={675}
+            className="w-full object-cover"
+            sizes="(max-width: 768px) 100vw, 800px"
+            priority
+          />
+        </div>
+      )}
 
       {/* Title */}
       <h1 className="font-bold text-4xl md:text-5xl text-balance leading-tight mb-5">
@@ -103,41 +120,60 @@ export default async function PostPage({ params }: Props) {
               className="rounded-full"
             />
           )}
-          <span className="font-mono text-sm text-gray-300">{post.author.name}</span>
-        </div>
-      )}
-
-      {/* Main image */}
-      {post.mainImage?.asset && (
-        <div className="mb-10 rounded-xl overflow-hidden">
-          <Image
-            src={urlFor(post.mainImage).width(1200).height(675).url()}
-            alt={post.mainImage.alt ?? post.title ?? "Post image"}
-            width={1200}
-            height={675}
-            className="w-full object-cover"
-            sizes="(max-width: 768px) 100vw, 800px"
-            priority
-          />
+          <span className="font-mono text-sm text-gray-300">
+            {post.author.name}
+          </span>
         </div>
       )}
 
       {/* Body */}
       {post.body && (
         <div className="prose prose-invert prose-blue max-w-none font-mono prose-headings:font-bold prose-headings:tracking-tight prose-a:text-blue-200 prose-code:text-magenta-200">
-          <PortableText value={post.body} />
+          <PortableText
+            value={post.body}
+            components={{
+              types: {
+                image: ({ value }) => {
+                  if (!value?.asset) return null;
+                  return (
+                    <figure className="my-8">
+                      <Image
+                        src={urlFor(value).width(800).url()}
+                        alt={value.alt ?? ""}
+                        width={800}
+                        height={450}
+                        className="rounded-lg w-full"
+                        sizes="(max-width: 768px) 100vw, 800px"
+                      />
+                      {value.caption && (
+                        <figcaption className="text-center text-sm text-gray-400 mt-2">
+                          {value.caption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  );
+                },
+              },
+            }}
+          />
         </div>
       )}
 
       {/* Footer nav */}
       <div className="mt-16 pt-8 border-t border-white/10 flex justify-between items-center">
-        <Link href="/posts" className="font-mono text-sm text-gray-400 hover:text-white transition-colors">
+        <Link
+          href="/posts"
+          className="font-mono text-sm text-gray-400 hover:text-white transition-colors"
+        >
           ← All posts
         </Link>
-        <Link href="https://midnight-code.tech" className="font-mono text-sm text-gray-400 hover:text-white transition-colors">
+        <Link
+          href="https://midnight-code.tech"
+          className="font-mono text-sm text-gray-400 hover:text-white transition-colors"
+        >
           Midnight Code →
         </Link>
       </div>
     </main>
-  )
+  );
 }

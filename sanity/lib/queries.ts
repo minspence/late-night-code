@@ -47,7 +47,13 @@ export const POST_QUERY = defineQuery(`
     excerpt,
     publishedAt,
     mainImage,
-    body,
+    body[]{
+      ...,
+      _type == "image" => {
+        ...,
+        asset->
+      }
+    },
     "category": category->{title, slug},
     "author": author->{name, image, bio},
     seo
