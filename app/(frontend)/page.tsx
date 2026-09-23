@@ -5,7 +5,7 @@ import { FEATURED_POSTS_QUERY } from "@/sanity/lib/queries"
 import PostCard from "@/app/components/PostCard"
 
 export const metadata: Metadata = {
-  title: "Late Night Code | Web Development Blog",
+  title: "Late Night Code | Web Development Bpnpmlog",
   description:
     "A blog about web development, design, and application building by Midnight Code. Late-night thoughts on Next.js, Sanity, TypeScript, and the developer life.",
   alternates: { canonical: "https://late-night-code.midnight-code.tech" },
